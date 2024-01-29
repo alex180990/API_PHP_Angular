@@ -19,6 +19,12 @@ switch($_SERVER['REQUEST_METHOD']) {
             $data = json_decode($corpsJSON, TRUE);
             $ControlleurAvis->ajouterJSON($data);
         break;
+
+    case 'DELETE':
+        if(isset($_GET['id'])) {
+            $ControlleurAvis->supprimerJSON($_GET['id']);
+        }
+        break;
     default:
 } 
 

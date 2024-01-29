@@ -69,6 +69,32 @@ class avis {
 
         return $message;
     }
+
+    public static function supprimer($id_avis) {
+        $message = "";
+    
+        $mysqli = self::connecter();
+        if ($requete = $mysqli->prepare("DELETE FROM avis WHERE id_avis = ?")) {
+            $requete->bind_param("i", $id_avis);
+    
+            if ($requete->execute()) {
+                $message = "Avis supprimé !";
+            } else {
+                $message = "Une erreur est survenue lors de la suppression: " . $requete->error;
+            }
+    
+            $requete->close();
+        } else {
+            echo "Une erreur a été détectée dans la requête utilisée : ";
+            echo $mysqli->error;
+            echo "<br>";
+            exit();
+        }
+    
+        $mysqli->close();
+    
+        return $message;
+    }
 }
 
 ?>

@@ -44,8 +44,8 @@ class ControlleurVideos {
                 $data['auteur']['courriel'],
                 $data['auteur']['facebook'],
                 $data['auteur']['instagram'],
-                $data['auteur']['instagram'],
-                $data['auteur']['instagram'],
+                $data['auteur']['twitch'],
+                $data['auteur']['site_web'],
 
                 $data['auteur']['description_auteur']
             );
@@ -76,11 +76,11 @@ class ControlleurVideos {
                     $data['auteur']['utilisateur_auteur'], 
                     $data['auteur']['verifie_auteur'], 
     
-                    $data['auteur']['courriel'],
-                    $data['auteur']['facebook'],
-                    $data['auteur']['instagram'],
-                    $data['auteur']['twitch'],
-                    $data['auteur']['site_web'],
+                    $data['auteur']['coordonnees']['courriel'],
+                    $data['auteur']['coordonnees']['facebook'],
+                    $data['auteur']['coordonnees']['instagram'],
+                    $data['auteur']['coordonnees']['twitch'],
+                    $data['auteur']['coordonnees']['site_web'],
     
                     $data['auteur']['description_auteur']
                 );
@@ -100,7 +100,10 @@ class ControlleurVideos {
 
         if ($video) {
             $auteur = $video->auteur;
-            $resultat->message = video::supprimer($_GET['id'], $auteur);
+
+            $auteurArray = ConversionObjetEnAuteurSQL($auteur);
+
+            $resultat->message = video::supprimer($_GET['id'], $auteurArray);
         } else {
             $resultat->message = "La vidéo n'existe pas.";
         }
@@ -108,4 +111,5 @@ class ControlleurVideos {
         echo json_encode($resultat);
     }
 }
+
 ?>

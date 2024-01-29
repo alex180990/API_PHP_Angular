@@ -20,5 +20,14 @@ class ControlleurAvis {
         }
         echo json_encode($resultat);
     }
+
+    function supprimerJSON() {
+        if(isset($_GET['id'])) {
+            $message = avis::supprimer($_GET['id']);
+            echo $message;
+        } else {
+            $message = "Impossible de supprimer l'avis. Des informations sont manquantes";
+        }
+    }
 }
 ?>

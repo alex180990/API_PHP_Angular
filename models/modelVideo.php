@@ -32,7 +32,7 @@ class video{
         $this->sous_titres = $sous_titres;
 
     }
-    
+
 
     static function connecter() {
         
@@ -194,7 +194,7 @@ class video{
 
         return $liste;
     }
-
+    
 
     public static function ObtenirUn($id)
     {
