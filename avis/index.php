@@ -2,7 +2,6 @@
 
 require_once '../inclus/DB.php';
 require_once '../inclus/headers.php';
-
 require_once '../controlleurs/ControlleurAvis.php';
 
 $ControlleurAvis = new ControlleurAvis;
@@ -10,6 +9,7 @@ $ControlleurAvis = new ControlleurAvis;
 switch($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         if(isset($_GET['id'])) {
+            $ControlleurAvis->afficherListeJSON($_GET['id']);
         } else {
             $ControlleurAvis->afficherJSON();
         }

@@ -28,6 +28,7 @@ class avis {
 
     public static function ObtenirTous() {
         $avis_liste = [];
+        $message = "";
         $mysqli = self::connecter();
     
         $resultatRequete = $mysqli->query("SELECT id_avis, note_avis, commentaire_avis, fk_video FROM avis ORDER BY id_avis");
@@ -36,7 +37,42 @@ class avis {
             foreach ($resultatRequete as $enregistrement) {
                 $avis_liste[] = new avis($enregistrement['id_avis'], $enregistrement['note_avis'], $enregistrement['commentaire_avis'], $enregistrement['fk_video']);
             }
+            $resultatRequete->close(); 
+
+            if(empty($avis_liste)){
+                $message = "Il n'y a pas d'avis !";
+                $avis_liste = $message;
+            }
+        }
+        else {
+            echo "Erreur dans la requête SQL : " . $mysqli->error;
+        }
+    
+        return $avis_liste;
+    }
+
+    public static function obtenirAvisParVideoId($id)
+    {
+        $avis_liste = [];
+        $mysqli = self::connecter();
+    
+        $resultatRequete = $mysqli->prepare("SELECT id_avis, note_avis, commentaire_avis, fk_video FROM avis WHERE fk_video = ?");
+        
+        if ($resultatRequete) {
+            $resultatRequete->bind_param("i", $id);
+            $resultatRequete->execute();
+            $result = $resultatRequete->get_result();
+    
+            while ($enregistrement = $result->fetch_assoc()) {
+                $avis_liste[] = new Avis($enregistrement['id_avis'], $enregistrement['note_avis'], $enregistrement['commentaire_avis'], $enregistrement['fk_video']);
+            }
+    
             $resultatRequete->close();
+
+            if(empty($avis_liste)){
+                $message = "Il n'y a pas d'avis pour cette vidéo!";
+                $avis_liste = $message;
+            }
         } else {
             echo "Erreur dans la requête SQL : " . $mysqli->error;
         }

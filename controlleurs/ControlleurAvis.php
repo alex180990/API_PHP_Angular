@@ -7,6 +7,11 @@ class ControlleurAvis {
         $avis = avis::ObtenirTous();
         echo json_encode($avis);
     }
+
+    function afficherListeJSON($id){
+        $avis = avis::obtenirAvisParVideoId($id);
+        echo json_encode($avis);
+    }
     
     function ajouterJSON($data) {
 

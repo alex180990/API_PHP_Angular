@@ -23,15 +23,14 @@ class ControlleurVideos {
             isset($data['nombre_vues']) && 
             isset($data['score']) && 
             isset($data['sous_titres']) && 
+
             isset($data['auteur']['nom_auteur']) && 
             isset($data['auteur']['utilisateur_auteur']) &&
-
             isset($data['auteur']['courriel']) &&
             isset($data['auteur']['facebook']) &&
             isset($data['auteur']['instagram']) && 
             isset($data['auteur']['instagram']) && 
             isset($data['auteur']['instagram']) &&  
-
             isset($data['auteur']['description_auteur']))
             {
             
@@ -68,7 +67,16 @@ class ControlleurVideos {
             isset($data['duree']) && 
             isset($data['nombre_vues']) && 
             isset($data['score']) && 
-            isset($data['sous_titres'])) {
+            isset($data['sous_titres']) &&
+            
+            isset($data['auteur']['nom_auteur']) && 
+            isset($data['auteur']['utilisateur_auteur']) &&
+            isset($data['auteur']['courriel']) &&
+            isset($data['auteur']['facebook']) &&
+            isset($data['auteur']['instagram']) && 
+            isset($data['auteur']['instagram']) && 
+            isset($data['auteur']['instagram']) &&  
+            isset($data['auteur']['description_auteur'])) {
             
                 $auteur = new Auteur(
                     $data['auteur']['id_auteur'], 

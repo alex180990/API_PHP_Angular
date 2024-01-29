@@ -159,6 +159,11 @@ class video{
             }
     
             $resultatRequete->close();
+
+            if(empty($avis_liste)){
+                $message = "Il n'y a pas d'avis pour cette vidéo!";
+                $avis_liste = $message;
+            }
         } else {
             echo "Erreur dans la requête SQL : " . $mysqli->error;
         }
@@ -195,7 +200,6 @@ class video{
         return $liste;
     }
     
-
     public static function ObtenirUn($id)
     {
         $mysqli = self::connecter();
