@@ -17,6 +17,7 @@ class ControlleurVideos {
         $resultat = new stdClass();
         if(isset($data['nom']) && 
             isset($data['description']) && 
+            isset($data['categorie']) && 
             isset($data['code']) && 
             isset($data['auteur']) && 
             isset($data['duree']) && 
@@ -29,8 +30,8 @@ class ControlleurVideos {
             isset($data['auteur']['courriel']) &&
             isset($data['auteur']['facebook']) &&
             isset($data['auteur']['instagram']) && 
-            isset($data['auteur']['instagram']) && 
-            isset($data['auteur']['instagram']) &&  
+            isset($data['auteur']['twitch']) && 
+            isset($data['auteur']['site_web']) &&  
             isset($data['auteur']['description_auteur']))
             {
             
@@ -49,7 +50,7 @@ class ControlleurVideos {
                 $data['auteur']['description_auteur']
             );
 
-            $resultat->message = video::ajouter($data['nom'], $data['description'], $data['code'], $auteur, $data['duree'], $data['nombre_vues'], $data['score'], $data['sous_titres']);
+            $resultat->message = video::ajouter($data['nom'], $data['description'], $data['categorie'], $data['code'], $auteur, $data['duree'], $data['nombre_vues'], $data['score'], $data['sous_titres']);
             
         } else {
             $resultat->message = "Impossible d'ajouter le vidéo. Des informations sont manquantes";
@@ -62,6 +63,7 @@ class ControlleurVideos {
         if(isset($_GET['id']) && 
             isset($data['nom']) && 
             isset($data['description']) && 
+            isset($data['categorie']) && 
             isset($data['code']) && 
             isset($data['auteur']) && 
             isset($data['duree']) && 
@@ -83,17 +85,17 @@ class ControlleurVideos {
                     $data['auteur']['nom_auteur'], 
                     $data['auteur']['utilisateur_auteur'], 
                     $data['auteur']['verifie_auteur'], 
-    
-                    $data['auteur']['coordonnees']['courriel'],
-                    $data['auteur']['coordonnees']['facebook'],
-                    $data['auteur']['coordonnees']['instagram'],
-                    $data['auteur']['coordonnees']['twitch'],
-                    $data['auteur']['coordonnees']['site_web'],
+
+                    $data['auteur']['courriel'],
+                    $data['auteur']['facebook'],
+                    $data['auteur']['instagram'],
+                    $data['auteur']['twitch'],
+                    $data['auteur']['site_web'],
     
                     $data['auteur']['description_auteur']
                 );
 
-            $resultat->message = video::modifier($_GET['id'], $data['nom'], $data['description'], $data['code'], $auteur, $data['duree'], $data['nombre_vues'], $data['score'], $data['sous_titres']);
+            $resultat->message = video::modifier($_GET['id'], $data['nom'], $data['description'], $data['categorie'], $data['code'], $auteur, $data['duree'], $data['nombre_vues'], $data['score'], $data['sous_titres']);
 
         } else {
             $resultat->message = "Impossible de modifier le vidéo. Des informations sont manquantes";

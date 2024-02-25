@@ -11,6 +11,7 @@ class video{
     public $id;
     public $nom;
     public $description;
+    public $categorie;
     public $code;
     public $auteur;
     public $date_publication;
@@ -20,10 +21,11 @@ class video{
     public $sous_titres;
     public $avis;
 
-    public function __construct($id, $nom, $description, $code, $date_publication, $duree, $nombre_vues, $score, $sous_titres){
+    public function __construct($id, $nom, $description, $categorie, $code, $date_publication, $duree, $nombre_vues, $score, $sous_titres){
         $this->id = $id;
         $this->nom = $nom;
         $this->description = $description;
+        $this->categorie = $categorie;
         $this->code = $code;
         $this->date_publication = $date_publication;
         $this->duree = $duree;
@@ -181,13 +183,16 @@ class video{
         if ($resultatRequete) {
             while ($enregistrement = $resultatRequete->fetch_assoc()) {
 
-                $video = new Video($enregistrement['id'], $enregistrement['nom'], $enregistrement['description'], $enregistrement['code'], $enregistrement['date_publication'], $enregistrement['duree'], $enregistrement['nombre_vues'], $enregistrement['score'], $enregistrement['sous_titres']);
+                $video = new Video($enregistrement['id'], $enregistrement['nom'], $enregistrement['description'],  $enregistrement['categorie'], $enregistrement['code'], $enregistrement['date_publication'], $enregistrement['duree'], $enregistrement['nombre_vues'], $enregistrement['score'], $enregistrement['sous_titres']);
                 
                 $avis_liste = self::obtenirAvisParVideoId($enregistrement['id']);
                 $video->avis = $avis_liste;
 
                 $auteurSQL = $enregistrement;
-                $auteurOBJ = ConversionAuteurSQLEnObjet($auteurSQL);
+                $auteurOBJ = new Auteur($auteurSQL['id_auteur'], $auteurSQL['nom_auteur'], $auteurSQL['utilisateur_auteur'],$auteurSQL['verifie_auteur'],$auteurSQL['courriel'],$auteurSQL['facebook'],$auteurSQL['instagram'],$auteurSQL['twitch'],$auteurSQL['site_web'],$auteurSQL['description_auteur']);
+
+                /*$auteurSQL = $enregistrement;
+                $auteurOBJ = ConversionAuteurSQLEnObjet($auteurSQL);*/
 
                 $video->auteur = $auteurOBJ;
                 $liste[] = $video;
@@ -212,10 +217,16 @@ class video{
 
             if ($enregistrement = $result->fetch_assoc()) {
 
-                $video = new Video($enregistrement['id'], $enregistrement['nom'], $enregistrement['description'], $enregistrement['code'], $enregistrement['date_publication'], $enregistrement['duree'], $enregistrement['nombre_vues'], $enregistrement['score'], $enregistrement['sous_titres']);
-            
+                $video = new Video($enregistrement['id'], $enregistrement['nom'], $enregistrement['description'], $enregistrement['categorie'], $enregistrement['code'], $enregistrement['date_publication'], $enregistrement['duree'], $enregistrement['nombre_vues'], $enregistrement['score'], $enregistrement['sous_titres']);
+                
+                $avis_liste = self::obtenirAvisParVideoId($enregistrement['id']);
+                $video->avis = $avis_liste;
+
                 $auteurSQL = $enregistrement;
-                $auteurOBJ = ConversionAuteurSQLEnObjet($auteurSQL);
+                $auteurOBJ = new Auteur($auteurSQL['id_auteur'], $auteurSQL['nom_auteur'], $auteurSQL['utilisateur_auteur'],$auteurSQL['verifie_auteur'],$auteurSQL['courriel'],$auteurSQL['facebook'],$auteurSQL['instagram'],$auteurSQL['twitch'],$auteurSQL['site_web'],$auteurSQL['description_auteur']);
+
+                /*$auteurSQL = $enregistrement;
+                $auteurOBJ = ConversionAuteurSQLEnObjet($auteurSQL);*/
 
                 $video->auteur = $auteurOBJ;
             } else {
@@ -232,7 +243,7 @@ class video{
         return $video;
     }
 
-    public static function ajouter($nom, $description, $code, Auteur $auteur, $duree, $nombre_vues, $score, $sous_titres)
+    public static function ajouter($nom, $description, $categorie, $code, Auteur $auteur, $duree, $nombre_vues, $score, $sous_titres)
     {
         $message = '';
         $mysqli = self::connecter();
@@ -242,8 +253,8 @@ class video{
         if ($resultAuteur['message'] === 'Auteur ajouté') {
             $idAuteur = $resultAuteur['idAuteur'];
     
-            if ($requete = $mysqli->prepare("INSERT INTO video(nom, description, code, fk_auteur, date_publication, duree, nombre_vues, score, sous_titres) VALUES(?, ?, ?, ?, NOW(), ?, ?, ?, ?)")) {
-                $requete->bind_param("ssisiiis", $nom, $description, $code, $idAuteur, $duree, $nombre_vues, $score, $sous_titres);
+            if ($requete = $mysqli->prepare("INSERT INTO video(nom, description, categorie, code, fk_auteur, date_publication, duree, nombre_vues, score, sous_titres) VALUES(?, ?, ?, ?, NOW(), ?, ?, ?, ?)")) {
+                $requete->bind_param("ssisiiis", $nom, $description, $categorie, $code, $idAuteur, $duree, $nombre_vues, $score, $sous_titres);
     
                 if ($requete->execute()) {
                     $message = "Vidéo ajoutée";
@@ -264,7 +275,7 @@ class video{
         return $message;
     }
 
-    public static function modifier($id, $nom, $description, $code, Auteur $auteur, $duree, $nombre_vues, $score, $sous_titres) {
+    public static function modifier($id, $nom, $description, $categorie, $code, Auteur $auteur, $duree, $nombre_vues, $score, $sous_titres) {
         $message = '';
         $mysqli = self::connecter();
     
@@ -276,8 +287,8 @@ class video{
         $resultAuteur = self::modifierAuteur($auteur);
         $id_auteur = $resultAuteur['id_auteur'];
     
-        if ($requete = $mysqli->prepare("UPDATE video SET nom=?, description=?, code=?, fk_auteur=?, duree=?, nombre_vues=?, score=?, sous_titres=? WHERE id=?")) {
-            $requete->bind_param("sssiiiisi", $nom, $description, $code, $id_auteur, $duree, $nombre_vues, $score, $sous_titres, $id);
+        if ($requete = $mysqli->prepare("UPDATE video SET nom=?, description=?, categorie=?, code=?, fk_auteur=?, duree=?, nombre_vues=?, score=?, sous_titres=? WHERE id=?")) {
+            $requete->bind_param("ssssiiiisi", $nom, $description, $categorie, $code, $id_auteur, $duree, $nombre_vues, $score, $sous_titres, $id);
     
             if($requete->execute()) {
                 $message = "Vidéo modifiée";
